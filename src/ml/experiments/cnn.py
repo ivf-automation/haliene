@@ -1,22 +1,8 @@
 import numpy as np
 from tensorflow import keras
-import tensorflow
+# import tensorflow
+import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import mnist
-
-#loading dataset
-(train_X, train_y), (val_X, val_y) = mnist.load_data()
-
-#normalizing the dataset
-train_X, val_X = train_X/255, val_X/255
-
-# visualizing 9 rndom digits from the dataset
-for i in range(331,340):
-    plt.subplot(i)
-    a = np.random.randint(0, train_X.shape[0], 1)
-    plt.imshow(train_X[a[0]], cmap = plt.get_cmap('binary'))
-
-plt.tight_layout()
-plt.show()
 
 
 # importing the libraries
@@ -51,6 +37,21 @@ def fitting_model(model, x, y, epoch):
 
 
 def main():
+    #loading dataset
+    (train_X, train_y), (val_X, val_y) = mnist.load_data()
+
+    #normalizing the dataset
+    train_X, val_X = train_X/255, val_X/255
+
+    # visualizing 9 rndom digits from the dataset
+    for i in range(331,340):
+        plt.subplot(i)
+        a = np.random.randint(0, train_X.shape[0], 1)
+        plt.imshow(train_X[a[0]], cmap = plt.get_cmap('binary'))
+
+    plt.tight_layout()
+    plt.show()
+
     #reshaping the independant variables
     train_X = train_X.reshape(train_X.shape[0], 28, 28, 1)
     val_X = val_X .reshape(val_X.shape[0], 28, 28, 1)
@@ -65,7 +66,7 @@ def main():
     compile_model(model, 'adam', 'categorical_crossentropy')
 
     #training model
-    history = model.fit(train_X, train_y, validation_data = (val_X, val_y), batch_size = 150, epochs = 80)
+    history = model.fit(train_X, train_y, validation_data = (val_X, val_y), batch_size = 150, epochs = 8)
     model.save("cnn_digitclass.model") #model will be save in root folder to be later called out for prediction
 
     #model performance visualization

@@ -28,3 +28,15 @@ I did it but left a very bad code behind. Please fix it. description is there in
 Also should I create new object for image or should I change and return it?
 
 Find a smart way to write Constructor which is not leaky on cases to initialize a valid instance. 
+
+
+
+In this branch, I tried cropping many images and it worked well. 
+
+Further we wanted to test a hypothesis - we can seperate sperms (dead or alive) based on color distinction. 
+We took 3 images of slides with no sperms (experiments/images/all_dust*) and we tweaked our current filter to not take those blobs. But it ended up not taking a dead sperm too. rending this hypothesis false
+Tweaks?
+- thresholding after hue-seperation -> increasing the threshold to 70.
+- Next we tried to use this hypothesis to not use only_dust (or dustful) blobs at all in for cca. It did mostly well but missed out on dead sperms. 
+
+Apart from that we also tried to use cnn for a toy usecase and it works. 

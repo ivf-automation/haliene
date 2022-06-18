@@ -43,13 +43,13 @@ def reduce_noise_from_dustful_image(preprocessor_runtime, dustful_image: Image):
 
 
 def reduce_noise_from_hue_highlighted_image(preprocessor_runtime, hue_highlighted: Image):
-    eroded_hue_highlighted = erode(preprocessor_runtime=preprocessor_runtime, image=hue_highlighted, kernelsize=6, iterations=2)
-    dilated_hue_highlighted = dilate(preprocessor_runtime=preprocessor_runtime, image=eroded_hue_highlighted, kernelsize=6, iterations=8)
+    eroded_hue_highlighted = erode(preprocessor_runtime=preprocessor_runtime, image=hue_highlighted, kernelsize=4, iterations=0)
+    dilated_hue_highlighted = dilate(preprocessor_runtime=preprocessor_runtime, image=eroded_hue_highlighted, kernelsize=6, iterations=3)
     dustless_hue_highlighted_frame = cv2.bitwise_and(hue_highlighted.frame, dilated_hue_highlighted.frame, mask=dilated_hue_highlighted.frame)
     if preprocessor_runtime.should_debug(hue_highlighted.name):
         show('morphed ' + hue_highlighted.name + ' ' + hue_highlighted.state.value, dustless_hue_highlighted_frame)
     return Image(
-        frame=dustless_hue_highlighted_frame,
+        frame=dilated_hue_highlighted.frame,
         state = ProcessState.MORPHED,
         original_image=hue_highlighted.original_image
     )

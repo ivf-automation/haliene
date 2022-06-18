@@ -23,12 +23,12 @@ while(True):
     
     frame = prev_frame
     # get current positions of the trackbars
-    ilowH = cv2.getTrackbarPos('lowH', 'image')
-    ihighH = cv2.getTrackbarPos('highH', 'image')
-    ilowS = cv2.getTrackbarPos('lowS', 'image')
-    ihighS = cv2.getTrackbarPos('highS', 'image')
-    ilowV = cv2.getTrackbarPos('lowV', 'image')
-    ihighV = cv2.getTrackbarPos('highV', 'image')
+    ilowH = 65 # cv2.getTrackbarPos('lowH', 'image')
+    ihighH = 156 # cv2.getTrackbarPos('highH', 'image')
+    ilowS = 80 # cv2.getTrackbarPos('lowS', 'image')
+    ihighS = 255 # cv2.getTrackbarPos('highS', 'image')
+    ilowV = 0 # cv2.getTrackbarPos('lowV', 'image')
+    ihighV = 189 # cv2.getTrackbarPos('highV', 'image')
     
     # if i % 1000000000:
     #     print("ilowH", ilowH )

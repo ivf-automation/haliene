@@ -7,6 +7,7 @@ from utils import show
 from constants import MARGIN, MAX_CCA_AREA, MIN_CCA_AREA
 import numpy.typing as npt
 import os
+import time
 
 
 def hue_separate(preprocessor_runtime, image: Image) -> npt.ArrayLike:
@@ -30,7 +31,7 @@ def hue_separate(preprocessor_runtime, image: Image) -> npt.ArrayLike:
 
 
 def get_dustful(preprocessor_runtime, image: Image):
-    hue_highlighted = cv2.threshold(image.frame, 20, 255,
+    hue_highlighted = cv2.threshold(image.frame, 70, 255,
 	cv2.THRESH_BINARY)[1]
 
     if preprocessor_runtime.should_debug(image.name):
@@ -125,8 +126,22 @@ def cca(preprocessor_runtime, binary_image: Image):
             cropped_image_name = crop_images_dir + '/' + binary_image.original_image.name + '_' + str(bigCount) + '.jpg'
             print('cropped_image_name', cropped_image_name)
             crop = binary_image.original_image.frame[y:y+h,x:x+w]
-            if not cv2.imwrite(cropped_image_name, crop):
-                raise Exception("could not write cropped image to " + cropped_image_name)
+            failure_count = 0
+            try:
+                while not cv2.imwrite(cropped_image_name, crop) and failure_count < 5:
+                    failure_count += 1
+                    time.sleep(1)
+                    print("sleeping", cropped_image_name)
+                if failure_count == 5:
+                    print("could not crop", cropped_image_name)
+            except Exception as e:
+                print("could not crop due to exception", cropped_image_name)
+            
+                # raise Exception("could not write cropped image to " + cropped_image_name)
+
+
+            
+
         
         bigCount += 1
     print("bigCount", bigCount)

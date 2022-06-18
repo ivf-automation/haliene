@@ -9,7 +9,7 @@ import os
 
 
 class PreProcessor:
-    def __init__(self, input_dir: str, output_dir: str, debug: bool = False, debug_imgname_allowlist: List[str] = [], should_crop_image = True):
+    def __init__(self, input_dir: str, output_dir: str, debug: bool = False, debug_imgname_allowlist: List[str] = [], should_crop_image = True, debug_only_allowlist = False):
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.debug = debug
@@ -19,6 +19,7 @@ class PreProcessor:
         self.labelled_subpath = 'labelled'
         self.ccaed_subpath = 'ccaed'
         self.should_crop_image = should_crop_image
+        self.debug_only_allowlist = debug_only_allowlist
     
     def should_debug(self, image_name):
         return self.debug and image_name in self.debug_imgname_allowlist
@@ -27,7 +28,7 @@ class PreProcessor:
         return '/'.join([self.output_dir, self.mldata_subpath, self.unlabelled_subpath])
 
     def preprocess_all(self):
-        input_images = os.listdir(self.input_dir) if not self.debug else self.debug_imgname_allowlist
+        input_images = os.listdir(self.input_dir) if not self.debug else [f + '.jpg' for f in self.debug_imgname_allowlist]
         for f in input_images:
             img_path = os.path.join(self.input_dir, f)
             if os.path.isfile(img_path):
@@ -41,12 +42,18 @@ class PreProcessor:
         input_image.original_image = orig_image ## Huge Red Flag -> just kill this thing. why is Image(file_path=img_path) repeated? THere is a leakage because if am doing self.original_image=self. latter was required so that hue_seperation can work with any image (and not just original_image) (see use of self.original_image there) and former is there so there to make it possible for hue_separation to work for original_image. i.e. former is because of latter.
         hue_separated_gray_image = hue_separate(preprocessor_runtime=self, image=input_image)
         dustful_image, hue_highligted, input_binary = get_dustful(preprocessor_runtime=self, image = hue_separated_gray_image)
-        
-        dustless_dustful_binary_image = reduce_noise_from_dustful_image(preprocessor_runtime=self, dustful_image = dustful_image)
-        dustless_hue_highlighted_binary_image = reduce_noise_from_hue_highlighted_image(preprocessor_runtime=self, hue_highlighted=hue_highligted)
 
+        dustless_hue_highlighted_binary_image = reduce_noise_from_hue_highlighted_image(preprocessor_runtime=self, hue_highlighted=hue_highligted)
+        dustless_dustful_binary_image = reduce_noise_from_dustful_image(preprocessor_runtime=self, dustful_image = dustful_image)
+        if self.should_debug(dustless_dustful_binary_image.name):
+            show('dustless_dustful_binary_image ' + dustless_dustful_binary_image.name, dustless_dustful_binary_image.frame)
+        if self.should_debug(dustless_hue_highlighted_binary_image.name):
+            show('dustless_hue_highlighted_binary_image ' + dustless_hue_highlighted_binary_image.name, dustless_hue_highlighted_binary_image.frame)
+        final_dirtless_usable_image_frame = cv2.bitwise_or(dustless_dustful_binary_image.frame, dustless_hue_highlighted_binary_image.frame, mask=input_binary.frame)
+        if self.should_debug(orig_image.name):
+            show('final_dirtless_usable_image ' + orig_image.name, final_dirtless_usable_image_frame)
         dirtless_image = Image(
-            frame = cv2.bitwise_or(dustless_dustful_binary_image.frame, dustless_hue_highlighted_binary_image.frame, mask=input_binary.frame),
+            frame = dustless_hue_highlighted_binary_image.frame,
             state = ProcessState.DIRTLESS,
             original_image = orig_image
         )

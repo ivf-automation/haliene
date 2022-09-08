@@ -7,12 +7,5 @@
     android:layout_gravity="center_vertical"
     android:orientation="vertical"
     tools:context=".MainActivity">
-    <Button
-        android:id="@+id/upload_image"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:contentDescription="@string/upload_image"
-        android:text="@string/upload_image"/>
 </FrameLayout>
 

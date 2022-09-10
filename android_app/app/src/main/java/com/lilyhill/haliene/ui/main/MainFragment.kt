@@ -18,24 +18,35 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
-
-
-
+import android.widget.Toast;
+import android.util.Log
 
 class MainFragment : Fragment() {
 
     private lateinit var uploadImageButton: Button
     private lateinit var imageViewer: ImageView
-    private lateinit var viewModel: MainViewModel
 
-    private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+//    private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+//        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+////        sets the image as the image view display. But make this function
+////        better with bitmaps since imageuri is not the proper way to set images
+//        this.imageViewer.setImageURI(uri)
+//        val fileObj: File = File(uri?.getPath());
+//        val reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), fileObj)
+//        val filePart = MultipartBody.Part.createFormData("media", fileObj?.name, reqFile)
+//
+////        uploadImage(filePart)
+////        presenter.callUploadImage(userToken, APPLICATION_JSON, APPLICATION_JSON, filePart)
+//    }
+
+    private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 //        sets the image as the image view display. But make this function
 //        better with bitmaps since imageuri is not the proper way to set images
-        this.imageViewer.setImageURI(uri)
-        val fileObj: File = File(uri?.getPath());
-        val reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), fileObj)
-        val filePart = MultipartBody.Part.createFormData("media", fileObj?.name, reqFile)
+        uri?.let { this.imageViewer.setImageURI(uri) }
+//        val fileObj: File = File(uri?.getPath());
+//        val reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), fileObj)
+//        val filePart = MultipartBody.Part.createFormData("media", fileObj?.name, reqFile)
 
 //        uploadImage(filePart)
 //        presenter.callUploadImage(userToken, APPLICATION_JSON, APPLICATION_JSON, filePart)
@@ -45,20 +56,38 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
     }
 
+    private lateinit var viewModel: MainViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?){
+        super.onCreate(savedInstanceState)
+    }
+
+    private fun selectImageFromGallery() = selectImageFromGalleryResult.launch("image/*")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val uploadImageButton = requireView().findViewById<Button>(R.id.upload_image) as Button
-        val imageViewer = requireView().findViewById<ImageView>(R.id.image_viewer) as ImageView
+        val inflated_fragment = inflater.inflate(R.layout.main_fragment, container, false)
+        val uploadImageButton = inflated_fragment.findViewById<Button>(R.id.upload_image)
+        Log.d("TAG", uploadImageButton.toString())
+        imageViewer = inflated_fragment.findViewById<ImageView>(R.id.image_viewer)
 
         uploadImageButton.setOnClickListener {
-            // Pass in the mime type you'd like to allow the user to select
-            // as the input
-            getContent.launch("image/*")
+
+            val toast = Toast.makeText(
+                activity?.applicationContext,
+                "hey you clicked me",
+                Toast.LENGTH_LONG
+            )
+            toast.show()
+            Log.d(
+                "TAG",
+                "***************************the button was clicked yes**********************"
+            )
+            selectImageFromGalleryResult.launch("image/*")
         }
-        return inflater.inflate(R.layout.main_fragment, container, false)
+        return inflated_fragment
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

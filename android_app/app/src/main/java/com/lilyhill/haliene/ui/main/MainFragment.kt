@@ -13,13 +13,14 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import com.lilyhill.haliene.R
-import com.lilyhill.haliene.uploadImage
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import android.widget.Toast;
 import android.util.Log
+import com.lilyhill.haliene.RetrofitInstance
+import retrofit2.Retrofit
 
 class MainFragment : Fragment() {
 
@@ -39,7 +40,6 @@ class MainFragment : Fragment() {
             file
         )
         val multipartImage = MultipartBody.Part.createFormData("image", file.name, requestFile);
-        uploadImage(multipartImage)
 //        val fileObj: File = File(uri?.getPath());
 //        val reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), fileObj)
 //        val filePart = MultipartBody.Part.createFormData("media", fileObj?.name, reqFile)
@@ -69,7 +69,12 @@ class MainFragment : Fragment() {
         Log.d("TAG", uploadImageButton.toString())
         imageViewer = inflated_fragment.findViewById<ImageView>(R.id.image_viewer)
         uploadImageButton.setOnClickListener {
-            selectImageFromGalleryResult.launch("image/*")
+//            selectImageFromGalleryResult.launch("image/*")
+            var retrofitInstance: RetrofitInstance = RetrofitInstance()
+            val retrofit: Retrofit? = retrofitInstance.getService()
+
+            Log.d("TEST", "Seems to work")
+
         }
         return inflated_fragment
     }

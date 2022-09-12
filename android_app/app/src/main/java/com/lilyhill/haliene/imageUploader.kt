@@ -15,3 +15,4 @@ suspend fun uploadImage (
     @Part image: MultipartBody.Part,
 ) {
 }
+

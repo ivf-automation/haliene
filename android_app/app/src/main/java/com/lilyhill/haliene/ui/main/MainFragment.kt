@@ -26,19 +26,6 @@ class MainFragment : Fragment() {
     private lateinit var uploadImageButton: Button
     private lateinit var imageViewer: ImageView
 
-//    private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-//        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-////        sets the image as the image view display. But make this function
-////        better with bitmaps since imageuri is not the proper way to set images
-//        this.imageViewer.setImageURI(uri)
-//        val fileObj: File = File(uri?.getPath());
-//        val reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), fileObj)
-//        val filePart = MultipartBody.Part.createFormData("media", fileObj?.name, reqFile)
-//
-////        uploadImage(filePart)
-////        presenter.callUploadImage(userToken, APPLICATION_JSON, APPLICATION_JSON, filePart)
-//    }
-
     private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 //        sets the image as the image view display. But make this function
@@ -74,17 +61,6 @@ class MainFragment : Fragment() {
         imageViewer = inflated_fragment.findViewById<ImageView>(R.id.image_viewer)
 
         uploadImageButton.setOnClickListener {
-
-            val toast = Toast.makeText(
-                activity?.applicationContext,
-                "hey you clicked me",
-                Toast.LENGTH_LONG
-            )
-            toast.show()
-            Log.d(
-                "TAG",
-                "***************************the button was clicked yes**********************"
-            )
             selectImageFromGalleryResult.launch("image/*")
         }
         return inflated_fragment

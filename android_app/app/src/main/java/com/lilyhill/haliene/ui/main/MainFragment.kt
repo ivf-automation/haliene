@@ -31,6 +31,15 @@ class MainFragment : Fragment() {
 //        sets the image as the image view display. But make this function
 //        better with bitmaps since imageuri is not the proper way to set images
         uri?.let { this.imageViewer.setImageURI(uri) }
+
+        val file: File = File(uri?.getPath())
+//        val file = LocalStorageProvider.getFile(activity, fileUri)
+        val requestFile: RequestBody = RequestBody.create(
+            MediaType.parse("image/*"),
+            file
+        )
+        val multipartImage = MultipartBody.Part.createFormData("image", file.name, requestFile);
+        uploadImage(multipartImage)
 //        val fileObj: File = File(uri?.getPath());
 //        val reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), fileObj)
 //        val filePart = MultipartBody.Part.createFormData("media", fileObj?.name, reqFile)
@@ -59,7 +68,6 @@ class MainFragment : Fragment() {
         val uploadImageButton = inflated_fragment.findViewById<Button>(R.id.upload_image)
         Log.d("TAG", uploadImageButton.toString())
         imageViewer = inflated_fragment.findViewById<ImageView>(R.id.image_viewer)
-
         uploadImageButton.setOnClickListener {
             selectImageFromGalleryResult.launch("image/*")
         }

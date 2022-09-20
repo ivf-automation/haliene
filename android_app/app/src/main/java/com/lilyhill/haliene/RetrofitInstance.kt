@@ -7,6 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.StringBuilder
 import android.util.Log
+import com.lilyhill.haliene.UserInfo
 
 class RetrofitInstance {
     val retrofit: Retrofit? = null
@@ -33,6 +34,29 @@ class RetrofitInstance {
                     Log.d("SUCCESS", myStringBuilder.toString())
                 }
                 override fun onFailure(call: Call<List<ImageApi>?>, response: Throwable) {
+                    Log.d("FAILED", "api call failed")
+                }
+            })
+        }
+        return retrofit
+    }
+    public fun putService(userInfo: UserInfo): Retrofit? {
+        if (retrofit == null){
+            val retrofit = Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(UploadImageService::class.java)
+            val retrofitData = retrofit.putName(userInfo)
+
+            retrofitData.enqueue(object : Callback<ImageApiResponse> {
+                override fun onResponse(call: Call<ImageApiResponse>, response: Response<ImageApiResponse>) {
+                    val responseBody = response.body()!!
+                    val myStringBuilder = StringBuilder()
+                    myStringBuilder.append(responseBody.id)
+                    Log.d("SUCCESS", myStringBuilder.toString())
+                }
+                override fun onFailure(call: Call<ImageApiResponse>, response: Throwable) {
                     Log.d("FAILED", "api call failed")
                 }
             })

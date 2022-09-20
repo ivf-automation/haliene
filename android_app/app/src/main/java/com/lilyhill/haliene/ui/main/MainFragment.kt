@@ -20,6 +20,7 @@ import java.io.File
 import android.widget.Toast;
 import android.util.Log
 import com.lilyhill.haliene.RetrofitInstance
+import com.lilyhill.haliene.UserInfo
 import retrofit2.Retrofit
 
 class MainFragment : Fragment() {
@@ -71,7 +72,13 @@ class MainFragment : Fragment() {
         uploadImageButton.setOnClickListener {
 //            selectImageFromGalleryResult.launch("image/*")
             var retrofitInstance: RetrofitInstance = RetrofitInstance()
-            val retrofit: Retrofit? = retrofitInstance.getService()
+//            val retrofit: Retrofit? = retrofitInstance.getService()
+            val userInfo = UserInfo( userId = null,
+                userName = "Alex",
+                userEmail = "alex@gmail.com",
+                userAge = "32",
+                userUid = "164E92FC-D37A-4946-81CB-29DE7EE4B124" )
+            val retrofit: Retrofit? = retrofitInstance.putService(userInfo)
 
             Log.d("TEST", "Seems to work")
 

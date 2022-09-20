@@ -1,7 +1,9 @@
 package com.lilyhill.haliene
 
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.Call
+import retrofit2.http.Body
 
 
 public interface UploadImageService {
@@ -10,4 +12,7 @@ public interface UploadImageService {
 
     @GET("country/get/all")
     fun getName() : Call<ImageApi>
+
+    @POST("/posts")
+    fun putName(@Body userinfo: UserInfo) : Call<ImageApiResponse>
 }

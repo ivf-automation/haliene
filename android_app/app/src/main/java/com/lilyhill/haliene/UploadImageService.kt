@@ -1,9 +1,11 @@
 package com.lilyhill.haliene
 
+import okhttp3.MultipartBody
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.Part
 
 
 public interface UploadImageService {
@@ -13,6 +15,9 @@ public interface UploadImageService {
     @GET("country/get/all")
     fun getName() : Call<ImageApi>
 
-    @POST("/posts")
+    @POST("preprocess/upload_test/")
     fun putName(@Body userinfo: UserInfo) : Call<ImageApiResponse>
+
+    @POST("preprocess/upload_test/")
+    fun putImage(@Body userinfo: UserInfo, @Part image: MultipartBody.Part) : Call<ImageApiResponse>
 }

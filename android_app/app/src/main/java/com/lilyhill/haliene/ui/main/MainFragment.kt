@@ -78,6 +78,12 @@ class MainFragment : Fragment() {
                 userEmail = "alex@gmail.com",
                 userAge = "32",
                 userUid = "164E92FC-D37A-4946-81CB-29DE7EE4B124" )
+//            val part = MultipartBody.Part.createFormData(
+//                "image", "my_image", RequestBody.create(
+//
+//                    Mediatype.parse("image/*")
+//                    )
+//            )
             val retrofit: Retrofit? = retrofitInstance.putService(userInfo)
 
             Log.d("TEST", "Seems to work")

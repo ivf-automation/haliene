@@ -1,14 +1,16 @@
 package com.lilyhill.haliene
 import com.google.gson.annotations.SerializedName
+import retrofit2.http.Part
 
 data class ImageApi (
     @SerializedName("userId" ) var userId : Int?    = null,
     @SerializedName("id"     ) var id     : Int?    = null,
-    @SerializedName("title"  ) var title  : String? = null
+    @SerializedName("title"  ) var title  : String? = null,
 )
 
 data class ImageApiResponse (
     @SerializedName("id"     ) var id     : Int?    = null,
+    @SerializedName("message"     ) var message     : String?    = null,
 )
 
 

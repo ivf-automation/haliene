@@ -36,8 +36,9 @@ def upload_image(request):
 
 @csrf_exempt 
 def upload_test(request):
-    if request.method == 'POST':
-        files = request.FILES.getlist('files')
+    # if request.method == 'POST':
+    #     pass
+        # files = request.FILES.getlist('files')
         # for file in files:
         #     img_numpy_arr = numpy.fromstring(file.read(), numpy.uint8)
         #     img = cv2.imdecode(img_numpy_arr, cv2.IMREAD_UNCHANGED)
@@ -46,4 +47,4 @@ def upload_test(request):
         #     inverte2(gs_imagem, "/Users/ramprakash/development/ivf-automation/data/invertida2.png")
         #     # perform preprocessing
         #     print(file)
-    return JsonResponse({"id": 401}, status=200)
+    return JsonResponse({"id": 401, "message":"response works"}, status=200)

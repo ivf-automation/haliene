@@ -26,8 +26,9 @@ import android.provider.MediaStore
 import android.content.ContentResolver
 
 import android.graphics.Bitmap
-
-
+import android.graphics.ImageDecoder.*
+import android.os.Build
+import androidx.annotation.RequiresApi
 
 
 class MainFragment : Fragment() {
@@ -35,21 +36,37 @@ class MainFragment : Fragment() {
     private lateinit var uploadImageButton: Button
     private lateinit var imageViewer: ImageView
 
+    @RequiresApi(Build.VERSION_CODES.P)
     private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 //        sets the image as the image view display. But make this function
 //        better with bitmaps since imageuri is not the proper way to set images
         uri?.let {
-            this.imageViewer.setImageURI(uri)
 
         val path = uri.getPath()
         val file: File = File(uri.getPath())
+        val file1: File = File(Uri.parse(uri.toString()).toString())
+        val imageUri = Uri.parse(uri.toString())
+        val imagesource = createSource(resolver, imageUri)
+        val bitmap = decodeBitmap(imagesource)
+//            this.imageViewer.setImageURI(uri)
+        this.imageViewer.setImageBitmap(bitmap);
         Log.d("FILE", path.toString())
+        Log.d("FILE", path.toString())
+        Log.d("FILE", Uri.parse(uri.toString()).toString())
+
         if (file.exists()){
             Log.d("FILE", "FIle found ")
         }
         else{
             Log.d("FILE", "FIle not found ")
+        }
+
+        if (file1.exists()){
+            Log.d("FILE 1", "FIle 1 found ")
+        }
+        else{
+            Log.d("FILE 1", "FIle 1 not found ")
         }
 //        val file = LocalStorageProvider.getFile(activity, fileUri)
         val requestFile: RequestBody = RequestBody.create(
@@ -94,11 +111,15 @@ class MainFragment : Fragment() {
         }
     }
 
+
+
     companion object {
         fun newInstance() = MainFragment()
     }
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var activity: Activity
+    private lateinit var resolver: ContentResolver
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -110,6 +131,8 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        activity = requireActivity()
+        resolver = activity?.contentResolver
         val inflated_fragment = inflater.inflate(R.layout.main_fragment, container, false)
         val uploadImageButton = inflated_fragment.findViewById<Button>(R.id.upload_image)
         Log.d("TAG", uploadImageButton.toString())
@@ -129,4 +152,17 @@ class MainFragment : Fragment() {
         // TODO: Use the ViewModel
     }
 
+    private fun openImagePicker(){
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+        //  limiting files by mime type
+            type = "image/*"
+        //  setting file type to be openable
+            addCategory(Intent.CATEGORY_OPENABLE)
+        }
+        startActivityForResult(intent, OPEN_DOCUMENT_REQUEST_CODE)
+
+    }
+
 }
+
+private const val OPEN_DOCUMENT_REQUEST_CODE = 0x33

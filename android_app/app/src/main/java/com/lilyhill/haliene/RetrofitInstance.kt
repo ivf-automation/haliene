@@ -65,14 +65,14 @@ class RetrofitInstance {
         }
         return retrofit
     }
-    public fun putImageService(userInfo: UserInfo, multiPartImage: MultipartBody.Part): Retrofit? {
+    public fun putImageService(multipartUserID:  MultipartBody.Part, multipartUserName:  MultipartBody.Part, multipartUserEmail:  MultipartBody.Part, multipartUserAge:  MultipartBody.Part, multipartImage:  MultipartBody.Part): Retrofit? {
         if (retrofit == null){
             val retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(UploadImageService::class.java)
-            val retrofitData = retrofit.putImage(userInfo, multiPartImage)
+            val retrofitData = retrofit.putImage(multipartUserID, multipartUserName, multipartUserEmail, multipartUserAge, multipartImage)
 
             retrofitData.enqueue(object : Callback<ImageApiResponse> {
                 override fun onResponse(call: Call<ImageApiResponse>, response: Response<ImageApiResponse>) {

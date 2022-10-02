@@ -11,6 +11,7 @@ data class ImageApi (
 data class ImageApiResponse (
     @SerializedName("id"     ) var id     : Int?    = null,
     @SerializedName("message"     ) var message     : String?    = null,
+    @SerializedName("image_path"     ) var image_path     : String?    = null,
 )
 
 

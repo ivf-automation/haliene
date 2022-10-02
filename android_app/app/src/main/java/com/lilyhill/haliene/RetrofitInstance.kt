@@ -7,7 +7,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.StringBuilder
 import android.util.Log
+import android.widget.ImageView
 import com.lilyhill.haliene.UserInfo
+import com.squareup.picasso.Picasso
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
@@ -68,14 +70,14 @@ class RetrofitInstance {
         }
         return retrofit
     }
-    public fun putImageService(multipartUserID:  MultipartBody.Part, multipartUserName:  MultipartBody.Part, multipartUserEmail:  MultipartBody.Part, multipartUserAge:  MultipartBody.Part, multipartImage:  MultipartBody.Part): Retrofit? {
+    public fun putImageService(multipartUserID:  MultipartBody.Part, multipartUserName:  MultipartBody.Part, multipartUserEmail:  MultipartBody.Part, multipartUserAge:  MultipartBody.Part, multipartImage:  MultipartBody.Part, imageViewer: ImageView): Retrofit? {
         if (retrofit == null){
-//            val client = OkHttpClient.Builder()
-//                .connectTimeout(100, TimeUnit.SECONDS)
-//                .readTimeout(100, TimeUnit.SECONDS).build()
+            val client = OkHttpClient.Builder()
+                .connectTimeout(100, TimeUnit.SECONDS)
+                .readTimeout(100, TimeUnit.SECONDS).build()
             val retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
-//                .client(client)
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(UploadImageService::class.java)
@@ -84,8 +86,18 @@ class RetrofitInstance {
             retrofitData.enqueue(object : Callback<ImageApiResponse> {
                 override fun onResponse(call: Call<ImageApiResponse>, response: Response<ImageApiResponse>) {
                     val responseBody = response.body()
+                    val imagePath = responseBody?.image_path
+                    val message = responseBody?.message
                     val myStringBuilder = StringBuilder()
-                    myStringBuilder.append(responseBody?.message)
+                    myStringBuilder.append(imagePath)
+                    val imageUrl = "$baseUrl/preprocess/static/$imagePath.png"
+                    Log.d("GOT image path", myStringBuilder.toString())
+
+//                    val imageUrl = "https://localhost.oread.pw/preprocess/static/invertida.png"
+//        this.imageViewer.setImageBitmap(bitmap);
+                    Picasso.get().load(imageUrl).into(imageViewer);
+
+                    Picasso.get().load(imageUrl).into(imageViewer);
                     Log.d("SUCCESS", myStringBuilder.toString())
                     Log.d("PRINTING RESPONSE", response.toString())
                 }

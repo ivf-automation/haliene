@@ -22,6 +22,7 @@ import android.util.Log
 import com.lilyhill.haliene.RetrofitInstance
 import com.lilyhill.haliene.UserInfo
 import retrofit2.Retrofit
+import com.squareup.picasso.Picasso
 import android.provider.MediaStore
 import android.content.ContentResolver
 
@@ -51,30 +52,16 @@ class MainFragment : Fragment() {
         val bitmap = decodeBitmap(imagesource)
 //            this.imageViewer.setImageURI(uri)
         val inputStream = resolver.openInputStream(uri)
-        this.imageViewer.setImageBitmap(bitmap);
+//        this.imageViewer.setImageBitmap(bitmap);
         Log.d("FILE", path.toString())
         Log.d("FILE", path.toString())
         Log.d("FILE", Uri.parse(uri.toString()).toString())
 
-        if (file.exists()){
-            Log.d("FILE", "FIle found ")
-        }
-        else{
-            Log.d("FILE", "FIle not found ")
-        }
 
-        if (file1.exists()){
-            Log.d("FILE 1", "FIle 1 found ")
-        }
-        else{
-            Log.d("FILE 1", "FIle 1 not found ")
-        }
-//        val file = LocalStorageProvider.getFile(activity, fileUri)
         val requestFile: RequestBody = RequestBody.create(
             MediaType.parse("image/*"),
             file
         )
-//        val multipartImage = MultipartBody.Part.createFormData("image", "dfi_image", requestFile);
         val multipartImage = MultipartBody.Part.createFormData("image", "dfi_image",
             RequestBody.create(
                 MediaType.parse("image/*"),
@@ -113,7 +100,7 @@ class MainFragment : Fragment() {
 //                    Mediatype.parse("image/*")
 //                    )
 //            )
-        val retrofit: Retrofit? = retrofitInstance.putImageService(multipartUserID, multipartUserName, multipartUserEmail, multipartUserAge, multipartImage)
+        val retrofit: Retrofit? = retrofitInstance.putImageService(multipartUserID, multipartUserName, multipartUserEmail, multipartUserAge, multipartImage, imageViewer)
         Log.d("POST COMPLETE", "Post operation completed")
 
 //        uploadImage(filePart)

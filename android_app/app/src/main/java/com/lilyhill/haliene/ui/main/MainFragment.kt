@@ -50,6 +50,7 @@ class MainFragment : Fragment() {
         val imagesource = createSource(resolver, imageUri)
         val bitmap = decodeBitmap(imagesource)
 //            this.imageViewer.setImageURI(uri)
+        val inputStream = resolver.openInputStream(uri)
         this.imageViewer.setImageBitmap(bitmap);
         Log.d("FILE", path.toString())
         Log.d("FILE", path.toString())
@@ -73,7 +74,13 @@ class MainFragment : Fragment() {
             MediaType.parse("image/*"),
             file
         )
-        val multipartImage = MultipartBody.Part.createFormData("image", file.name, requestFile);
+//        val multipartImage = MultipartBody.Part.createFormData("image", "dfi_image", requestFile);
+        val multipartImage = MultipartBody.Part.createFormData("image", "dfi_image",
+            RequestBody.create(
+                MediaType.parse("image/*"),
+                inputStream?.readBytes()
+            )
+        );
         val multipartUserID = MultipartBody.Part.createFormData(
             "userId","10"
         )
@@ -86,6 +93,8 @@ class MainFragment : Fragment() {
         val multipartUserAge = MultipartBody.Part.createFormData(
             "userAge","32"
         );
+        Log.d("PART CREATION", "part creation completed")
+
 //        val fileObj: File = File(uri?.getPath());
 //        val reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), fileObj)
 //        val filePart = MultipartBody.Part.createFormData("media", fileObj?.name, reqFile)
@@ -105,6 +114,7 @@ class MainFragment : Fragment() {
 //                    )
 //            )
         val retrofit: Retrofit? = retrofitInstance.putImageService(multipartUserID, multipartUserName, multipartUserEmail, multipartUserAge, multipartImage)
+        Log.d("POST COMPLETE", "Post operation completed")
 
 //        uploadImage(filePart)
 //        presenter.callUploadImage(userToken, APPLICATION_JSON, APPLICATION_JSON, filePart)

@@ -36,6 +36,17 @@ def upload_image(request):
 
 @csrf_exempt 
 def upload_test(request):
+    print(request.__dict__)
+    print(request.FILES.getlist('image'))
+    print()
+    # print(request.FILES.getlist('image'))
+    # file = request.FILES.getlist('image')
+    file = request.FILES.getlist('image')[0]
+    # print(file)
+    # print('file read')
+    content = file.read()
+    with open('/Users/ramprakash/development/ivf-automation/data/testing_images/test.png', 'wb') as img:
+        img.write(content)
     # if request.method == 'POST':
     #     pass
         # files = request.FILES.getlist('files')

@@ -9,6 +9,9 @@ import java.lang.StringBuilder
 import android.util.Log
 import com.lilyhill.haliene.UserInfo
 import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
+
 
 class RetrofitInstance {
     val retrofit: Retrofit? = null
@@ -67,8 +70,12 @@ class RetrofitInstance {
     }
     public fun putImageService(multipartUserID:  MultipartBody.Part, multipartUserName:  MultipartBody.Part, multipartUserEmail:  MultipartBody.Part, multipartUserAge:  MultipartBody.Part, multipartImage:  MultipartBody.Part): Retrofit? {
         if (retrofit == null){
+//            val client = OkHttpClient.Builder()
+//                .connectTimeout(100, TimeUnit.SECONDS)
+//                .readTimeout(100, TimeUnit.SECONDS).build()
             val retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
+//                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(UploadImageService::class.java)
